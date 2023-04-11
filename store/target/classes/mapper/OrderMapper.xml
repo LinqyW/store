@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.gdufs.store.mapper.OrderMapper">
+    <resultMap id="OrderEntityMap" type="cn.edu.gdufs.store.entity.Order">
+        <id column="oid" property="oid"/>
+        <result column="recv_name" property="recvName"/>
+        <result column="recv_phone" property="recvPhone"/>
+        <result column="recv_province" property="recvProvince"/>
+        <result column="recv_city" property="recvCity"/>
+        <result column="recv_area" property="recvArea"/>
+        <result column="recv_address" property="recvAddress"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="status" property="status"/>
+        <result column="order_time" property="orderTime"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="created_user" property="createdUser"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_user" property="modifiedUser"/>
+        <result column="modified_time" property="modifiedTime"/>
+    </resultMap>
+    <!-- 插入订单数据 -->
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="oid">
+        INSERT INTO orders (uid, recv_name, recv_phone, recv_province, recv_city, recv_area, recv_address,
+                            total_price, status, order_time, pay_time, created_user, created_time, modified_user,
+                            modified_time)
+        VALUES (#{uid}, #{recvName}, #{recvPhone}, #{recvProvince}, #{recvCity}, #{recvArea},
+                #{recvAddress}, #{totalPrice}, #{status}, #{orderTime}, #{payTime}, #{createdUser},
+                #{createdTime}, #{modifiedUser}, #{modifiedTime})
+    </insert>
+
+    <!-- 插入订单商品数据 -->
+    <insert id="insertOrderItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_item (oid, pid, title, image, price, num, created_user,
+                                created_time, modified_user, modified_time)
+        VALUES (#{oid}, #{pid}, #{title}, #{image}, #{price}, #{num}, #{createdUser},
+                #{createdTime}, #{modifiedUser}, #{modifiedTime})
+    </insert>
+
+    <!-- 更新订单数据的状态为已取消 -->
+    <update id="cancelOrder">
+        UPDATE
+            orders
+        SET
+            status = 2,
+            modified_user = #{modifiedUser},
+            modified_time = #{modifiedTime}
+        WHERE
+            oid = #{oid}
+    </update>
+
+    <!-- 删除订单商品数据 -->
+    <delete id="cancelOrderItem">
+        DELETE
+        FROM order_item
+        WHERE oid = #{oid}
+    </delete>
+
+    <!-- 查找订单数据 -->
+    <select id="findByOid" resultMap="OrderEntityMap">
+        SELECT *
+        FROM orders
+        WHERE oid = #{oid}
+    </select>
+</mapper>
